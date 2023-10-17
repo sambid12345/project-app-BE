@@ -27,7 +27,19 @@ router.get('/recipeBook', (req, res, next)=>{
         res.send('Hello User');
         next();
     })
-   
+})
+
+router.get('/fetchRecipe', (req, res, next)=>{
+    console.log('inside fetchReciperouter');
+    
+    Recipe.find().then(recipeList=>{
+        console.log(recipeList, 'recipe list data');
+        res.status(200).send(recipeList);
+        next();
+    }, err=>{
+        res.send('Hello User ERROR');
+        next();
+    })
 })
 
 module.exports = router;

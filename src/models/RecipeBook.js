@@ -6,9 +6,9 @@ const recipeBookSchema = mongoose.Schema({
     description: {type: String , required: true},
     imagePath: {type: String , required: true},
     ingredient: [{ name: {type: String, required: true}, amount: {type: String, required: true} }],
-    price : {type: String, required: true},
-    star: {type: String, required: true},
-    height: {type: String, required: true}
+    price : {type: Number},
+    star: {type: Number},
+    height: {type: String}
 });
 
 module.exports = mongoose.model("RecipeBook", recipeBookSchema);
