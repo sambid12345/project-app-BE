@@ -1,4 +1,5 @@
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const router = express.Router();
 const Recipe = require('../models/Recipe');
 
@@ -40,6 +41,43 @@ router.get('/fetchRecipe', (req, res, next)=>{
         res.send('Hello User ERROR');
         next();
     })
+})
+
+router.put('/storeRecipes', async (req, res, next)=>{
+    console.log('data to save',req.body);
+    let data = req.body;
+    let newRecordList = [], oldRecordList=[], oldIds = [];
+    data.forEach(element => {
+        if(element._id){
+            oldRecordList.push( element );
+            oldIds.push(new ObjectId(element._id));
+        }else{
+            newRecordList.push(element);
+        }
+    });
+
+    
+    
+    // { name: { $in: [ 'Mango Rice', 'Indian Chicken Curry' ] } }
+   
+
+    const bulkOperations = oldRecordList.map((doc) => ({
+        
+        updateOne: {
+          filter: { _id: new ObjectId(doc._id)},
+          update: doc
+        }
+      }));
+  
+      console.log('bulk operations', bulkOperations);
+      try{
+        await Recipe.bulkWrite(bulkOperations);
+        res.status(200).send('data saved');
+      }catch(err){
+        console.log(err);
+        res.status(500).send('Error occured');
+      }
+      
 })
 
 module.exports = router;
